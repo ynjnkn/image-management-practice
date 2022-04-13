@@ -1,12 +1,15 @@
 // Dependencies
 const { Router } = require("express");
 const uploadRouter = Router();
+const { v4: uuid } = require("uuid");
+const mime = require("mime-types");
 const multer = require("multer");
-const upload = multer({ dest: "uploads" });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "./uploads"),
-  filename: (req, file, cb) => cb(null, file.originalname),
+  filename: (req, file, cb) =>
+    cb(null, `${uuid()}.${mime.extension(file.mimetype)}`),
 });
+const upload = multer({ storage });
 
 uploadRouter.post("/", upload.single("imageTest"), async (req, res) => {
   try {
