@@ -15,7 +15,7 @@ const server = async () => {
 
     // Middlewares
     app.use(express.json());
-    app.use("/upload", uploadRouter);
+    app.use("/uploads", uploadRouter);
 
     // Starts Listening
     app.listen(PORT, async () => {
