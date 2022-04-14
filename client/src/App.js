@@ -7,7 +7,7 @@ import ImageUploadForm from "./components/ImageUploadForm";
 const App = () => {
   return (
     <div>
-      <h2>사진첩</h2>
+      <h2>Photo Album</h2>
       <ImageUploadForm />
     </div>
   );
