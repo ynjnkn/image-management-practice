@@ -11,15 +11,24 @@ const ImageUploadForm = () => {
   const defaultImageFileName = "이미지 파일을 업로드 해주세요.";
   const [imageFile, setImageFile] = useState(null);
   const [imageFileName, setImageFileName] = useState(defaultImageFileName);
+  const [imagePreview, setImagePreview] = useState(null);
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const imageFileSelectHandler = (event) => {
     const imageFile = event.target.files[0];
+    const fileReader = new FileReader();
     setImageFile(imageFile);
     setImageFileName(imageFile.name);
+
+    // 이미지 프리뷰 생성
+    fileReader.readAsDataURL(imageFile);
+    fileReader.onload = (event) => {
+      setImagePreview(event.target.result);
+    };
   };
 
   const formSubmitHandler = async (event) => {
+    if (!imageFile) return;
     event.preventDefault();
     const formData = new FormData();
     formData.append("image", imageFile);
@@ -36,10 +45,12 @@ const ImageUploadForm = () => {
       setTimeout(() => {
         setUploadPercentage(0);
         setImageFileName(defaultImageFileName);
+        setImagePreview(null);
       }, 3000);
     } catch (error) {
       setUploadPercentage(0);
       setImageFileName(defaultImageFileName);
+      setImagePreview(null);
       console.log({ error: { name: error.name, message: error.message } });
       toast.error(error.message);
     }
@@ -47,7 +58,10 @@ const ImageUploadForm = () => {
 
   return (
     <form onSubmit={formSubmitHandler}>
-      <UploadProgressBar uploadPercentage={uploadPercentage} />
+      <ImagePreview src={imagePreview} />
+      {uploadPercentage !== 0 ? (
+        <UploadProgressBar uploadPercentage={uploadPercentage} />
+      ) : null}
       <ImageFileDropZone>
         {imageFileName}
         <ImageFileSelector
@@ -63,8 +77,16 @@ const ImageUploadForm = () => {
 
 export default ImageUploadForm;
 
+const ImagePreview = styled.img`
+  width: 100%;
+  margin: 0px auto 20px auto;
+  display: block;
+  border-radius: 10px;
+  border: 0px grey;
+`;
+
 const ImageFileDropZone = styled.div`
-  border: 1px dashed black;
+  border: 1px dashed grey;
   height: 200px;
   background-color: none;
   border-radius: 10px;
