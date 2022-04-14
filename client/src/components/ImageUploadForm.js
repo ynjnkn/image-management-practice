@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
 const ImageUploadForm = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -21,11 +22,10 @@ const ImageUploadForm = () => {
       const res = await axios.post("/uploads", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log({ res });
-      alert("success");
+      toast.success("이미지 파일 업로드 성공");
     } catch (error) {
       console.log({ error: { name: error.name, message: error.message } });
-      alert("fail");
+      toast.error(error.message);
     }
   };
 

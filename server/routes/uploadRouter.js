@@ -24,7 +24,11 @@ const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
     if (acceptedImageFileFormats.includes(file.mimetype)) cb(null, true);
-    else cb(new Error("Invalid File Type"), false);
+    else {
+      const error = new Error("Invalid file type");
+      error.name = "MulterError";
+      cb(error, false);
+    }
   },
   limits: {
     fileSize: 1024 * 1024 * 5, // ~5MB
