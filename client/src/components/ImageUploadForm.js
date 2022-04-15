@@ -20,6 +20,16 @@ const ImageUploadForm = () => {
     setImageFile(imageFile);
     setImageFileName(imageFile.name);
 
+    if (imageFile.size > 1024 * 1024 * 5) {
+      toast.error("이미지 파일 사이즈는 5MB 이하");
+      event.target.value = "";
+      setImageFile(null);
+      setImageFileName(defaultImageFileName);
+      setUploadPercentage(0);
+      setImagePreview(null);
+      return;
+    }
+    console.log("이거 실행?");
     // 이미지 프리뷰 생성
     fileReader.readAsDataURL(imageFile);
     fileReader.onload = (event) => {
@@ -58,7 +68,7 @@ const ImageUploadForm = () => {
 
   return (
     <form onSubmit={formSubmitHandler}>
-      <ImagePreview src={imagePreview} />
+      <ImagePreview src={imagePreview} imagePreview={imagePreview} />
       {uploadPercentage !== 0 ? (
         <UploadProgressBar uploadPercentage={uploadPercentage} />
       ) : null}
@@ -67,6 +77,7 @@ const ImageUploadForm = () => {
         <ImageFileSelector
           id="image"
           type="file"
+          accept="image/*"
           onChange={imageFileSelectHandler}
         />
       </ImageFileDropZone>
@@ -78,11 +89,12 @@ const ImageUploadForm = () => {
 export default ImageUploadForm;
 
 const ImagePreview = styled.img`
-  width: 100%;
+  width: ${(props) => (props.imagePreview ? "100%" : "0%")};
   margin: 0px auto 20px auto;
   display: block;
   border-radius: 10px;
   border: 0px grey;
+  transition: 0.3s;
 `;
 
 const ImageFileDropZone = styled.div`
