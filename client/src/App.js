@@ -1,14 +1,15 @@
 // Dependencies
 import React from "react";
+import styled from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Components
-import ImageUploadForm from "./components/ImageUploadForm";
+import { Album, ImageUploadForm } from "./components";
 
 const App = () => {
   return (
-    <div>
+    <AppWrap>
       <ToastContainer
         position="bottom-right"
         hideProgressBar={true}
@@ -16,8 +17,14 @@ const App = () => {
       />
       <h2>Photo Album</h2>
       <ImageUploadForm />
-    </div>
+      <Album />
+    </AppWrap>
   );
 };
 
 export default App;
+
+const AppWrap = styled.div`
+  max-width: 600px;
+  margin: auto;
+`;

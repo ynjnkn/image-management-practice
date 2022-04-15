@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 
 // Components
-import UploadProgressBar from "./UploadProgressBar";
+import { UploadProgressBar } from "./";
 
 const ImageUploadForm = () => {
   const defaultImageFileName = "이미지 파일을 업로드 해주세요.";
@@ -34,6 +34,7 @@ const ImageUploadForm = () => {
     fileReader.onload = (event) => {
       setImagePreview(event.target.result);
     };
+    event.target.value = "";
   };
 
   const formSubmitHandler = async (event) => {
@@ -42,7 +43,7 @@ const ImageUploadForm = () => {
     const formData = new FormData();
     formData.append("image", imageFile);
     try {
-      const res = await axios.post("/images", formData, {
+      const response = await axios.post("/images", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (ProgressEvent) => {
           const { loaded, total } = ProgressEvent;
@@ -52,14 +53,16 @@ const ImageUploadForm = () => {
       });
       toast.success("이미지 파일 업로드 성공");
       setTimeout(() => {
-        setUploadPercentage(0);
+        setImageFile(null);
         setImageFileName(defaultImageFileName);
         setImagePreview(null);
+        setUploadPercentage(0);
       }, 1000);
     } catch (error) {
-      setUploadPercentage(0);
+      setImageFile(null);
       setImageFileName(defaultImageFileName);
       setImagePreview(null);
+      setUploadPercentage(0);
       console.log({ error: { name: error.name, message: error.message } });
       toast.error(error.message);
     }
