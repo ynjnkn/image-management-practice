@@ -5,6 +5,9 @@ const multer = require("multer");
 const { v4: uuid } = require("uuid");
 const mime = require("mime-types");
 
+// Models
+const { Image } = require("../models/");
+
 // Multer Configurations
 const acceptedImageFileFormats = [
   "image/apng",
@@ -37,6 +40,12 @@ const upload = multer({
 
 uploadRouter.post("/", upload.single("image"), async (req, res) => {
   try {
+    const image = new Image({
+      key: req.file.filename,
+      originalFileName: req.file.originalname,
+    });
+    await image.save();
+    console.log(req.file);
     return res.status(200).json(req.file);
   } catch (error) {
     console.log({ error: { name: error.name, message: error.message } });

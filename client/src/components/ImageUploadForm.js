@@ -56,7 +56,7 @@ const ImageUploadForm = () => {
         setUploadPercentage(0);
         setImageFileName(defaultImageFileName);
         setImagePreview(null);
-      }, 3000);
+      }, 1000);
     } catch (error) {
       setUploadPercentage(0);
       setImageFileName(defaultImageFileName);
