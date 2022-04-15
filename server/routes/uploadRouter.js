@@ -38,6 +38,7 @@ const upload = multer({
   },
 });
 
+// APIs
 uploadRouter.post("/", upload.single("image"), async (req, res) => {
   try {
     const image = new Image({
@@ -46,7 +47,18 @@ uploadRouter.post("/", upload.single("image"), async (req, res) => {
     });
     await image.save();
     console.log(req.file);
-    return res.status(200).json(req.file);
+    return res.status(200).json(image);
+  } catch (error) {
+    console.log({ error: { name: error.name, message: error.message } });
+    return res
+      .status(500)
+      .send({ error: { name: error.name, message: error.message } });
+  }
+});
+uploadRouter.get("/", async (req, res) => {
+  try {
+    const images = await Image.find();
+    return res.status(200).json(images);
   } catch (error) {
     console.log({ error: { name: error.name, message: error.message } });
     return res

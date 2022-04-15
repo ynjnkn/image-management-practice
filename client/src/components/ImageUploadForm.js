@@ -19,7 +19,7 @@ const ImageUploadForm = () => {
     const fileReader = new FileReader();
     setImageFile(imageFile);
     setImageFileName(imageFile.name);
-
+    // [예외 처리] 이미지 파일 사이즈가 5MB가 넘을 경우
     if (imageFile.size > 1024 * 1024 * 5) {
       toast.error("이미지 파일 사이즈는 5MB 이하");
       event.target.value = "";
@@ -29,7 +29,6 @@ const ImageUploadForm = () => {
       setImagePreview(null);
       return;
     }
-    console.log("이거 실행?");
     // 이미지 프리뷰 생성
     fileReader.readAsDataURL(imageFile);
     fileReader.onload = (event) => {
@@ -43,7 +42,7 @@ const ImageUploadForm = () => {
     const formData = new FormData();
     formData.append("image", imageFile);
     try {
-      const res = await axios.post("/uploads", formData, {
+      const res = await axios.post("/images", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (ProgressEvent) => {
           const { loaded, total } = ProgressEvent;
